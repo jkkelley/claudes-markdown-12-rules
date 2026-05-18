@@ -1,0 +1,30 @@
+# Dependencies
+prospector-fe/node_modules/
+prospector-be/node_modules/
+prospector-events/node_modules/
+prospector-scraper-yp/node_modules/
+
+# Lock files (never change, never need context)
+**/package-lock.json
+**/go.sum
+**/poetry.lock
+**/Cargo.lock
+
+# Build output
+prospector-fe/dist/
+prospector-fe/.next/
+**/build/
+**/target/
+
+# Binary / compiled
+prospector-events/bin/
+**/__pycache__/
+**/*.pyc
+
+# Stale branches
+**/.worktrees/
+
+# IDE / cache
+**/.superpowers/
+**/.claude/agents/
+**/node_modules/.cache
