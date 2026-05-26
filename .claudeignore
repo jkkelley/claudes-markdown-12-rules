@@ -1,8 +1,5 @@
 # Dependencies
-prospector-fe/node_modules/
-prospector-be/node_modules/
-prospector-events/node_modules/
-prospector-scraper-yp/node_modules/
+**/node_modules/
 
 # Lock files (never change, never need context)
 **/package-lock.json
@@ -11,13 +8,13 @@ prospector-scraper-yp/node_modules/
 **/Cargo.lock
 
 # Build output
-prospector-fe/dist/
-prospector-fe/.next/
+**/dist/
+**/.next/
 **/build/
 **/target/
 
 # Binary / compiled
-prospector-events/bin/
+**/bin/
 **/__pycache__/
 **/*.pyc
 
@@ -28,3 +25,28 @@ prospector-events/bin/
 **/.superpowers/
 **/.claude/agents/
 **/node_modules/.cache
+
+# Test coverage / reports
+**/coverage/
+**/.nyc_output/
+**/htmlcov/
+
+# Env files (security + noise)
+**/.env*
+!**/.env.example
+
+# Logs
+**/*.log
+**/logs/
+
+# Terraform state / cache
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.backup
+
+# Docker layer cache
+**/.dockercache/
+
+# OS noise
+**/.DS_Store
+**/Thumbs.db
