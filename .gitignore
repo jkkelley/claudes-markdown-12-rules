@@ -63,6 +63,7 @@
 # Vim swap files
 **/*.swp
 **/*.swo
+**/*.un~
 
 # OS noise
 **/.DS_Store
