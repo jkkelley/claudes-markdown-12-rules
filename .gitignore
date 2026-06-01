@@ -1,0 +1,69 @@
+# Dependencies
+**/node_modules/
+
+# Lock files (never change, never need context)
+**/package-lock.json
+**/go.sum
+**/poetry.lock
+**/Cargo.lock
+
+# Build output
+**/dist/
+**/.next/
+**/build/
+**/target/
+
+# Binary / compiled
+**/bin/
+**/__pycache__/
+**/*.pyc
+
+# Stale branches
+**/.worktrees/
+
+# IDE / cache
+**/.superpowers/
+**/.claude/agents/
+**/.vscode/
+**/.idea/
+**/node_modules/.cache
+
+# Test coverage / reports
+**/coverage/
+**/.nyc_output/
+**/htmlcov/
+**/.pytest_cache/
+
+# Env files (security + noise)
+**/.env*
+!**/.env.example
+
+# Logs
+**/*.log
+**/logs/
+
+# Terraform state / cache / secrets
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.backup
+**/*.tfvars
+!**/*.tfvars.example
+
+# Docker layer cache
+**/.dockercache/
+
+# Python venvs
+**/.venv/
+**/venv/
+
+# Temp / scratch
+**/tmp/
+**/temp/
+
+# Vim swap files
+**/*.swp
+**/*.swo
+
+# OS noise
+**/.DS_Store
+**/Thumbs.db
