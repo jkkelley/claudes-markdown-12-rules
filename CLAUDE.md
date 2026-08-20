@@ -67,6 +67,15 @@ Do not wait for the user to spell out the steps each time.
 6. Verify the result: on `main`, in sync with `origin/main`, and the feature branch gone from both local and remote.
 7. Remove any temporary or scratch directories and scaffolding created during the work.
 
+## The close-out flow
+
+**`CONTEXT_STATE.md` -> PR -> cleanup -> hydration prompt.** In that order, every time.
+
+1. Update `CONTEXT_STATE.md` **on the work branch, as part of the work**, before the PR is opened. It is part of the deliverable, not paperwork that follows it.
+2. Open the PR. It carries the code and the state file together, so one review sees the change and the record of the change.
+3. After the merge, run `bash .claude/skills/work-order/scripts/work-order.sh close --id WO-...`. It opens its own PR for the merge SHA, the archive move and the `INDEX.md` regeneration. That one is generated bookkeeping and is expected.
+4. Leave the hydration prompt at the bottom of `CONTEXT_STATE.md` naming the next work order by **both its id and its full title**, so the next session starts from a file rather than from memory.
+
 Zenith agent instructions
 
 These are common instructions for Zenith's agents across all scenarios.
