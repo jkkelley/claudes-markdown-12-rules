@@ -161,12 +161,18 @@ The session is launched with the command the `hydration-prompt` skill hands back
 
 ```sh
 claude -p "Read Hydration Prompt located at \
-/full/path/HYDRATION.md, Process work order WO-... per its acceptance \
-criteria after you've read it." --permission-mode bypassPermissions \
--n "Session: WO-... - The full title"
+/full/path/HYDRATION.md, Process work order WO-20260819-ca7c per its \
+acceptance criteria after you've read it." \
+--permission-mode bypassPermissions \
+-n "Session: WO-20260819-ca7c - Phase 5: the mothership GUI, its \
+container image, and the first visual"
 ```
 
-**The command is folded by the script at 68 columns, with continuations flush left, and that is not cosmetic.** A single line is not safe: every surface it travels through soft-wraps at its own width, and a copy taken out of that surface can carry the break with it, landing in the middle of a quoted string. The first fragment is then usually a syntactically valid command that does the wrong thing, so the shell runs it rather than complaining. Folding it ourselves means the line the user sees is the line we wrote. A backslash-newline is removed inside double quotes as well as outside, so the rejoin is exact.
+**The script lays it out one argument per line and folds at 68 columns, flush left, and that is not cosmetic.** A single line is not safe: every surface it travels through soft-wraps at its own width, and a copy taken out of that surface carries the break with it into the middle of a quoted string. The first fragment is then usually a syntactically valid command that does the wrong thing, so the shell runs it rather than complaining.
+
+One argument per line rather than a greedy fill, because a greedy fill puts an argument end, a whole flag and the start of the next argument on one line - so adding a flag lands it wherever the fill happens to put it. Argument-per-line means a new flag is a new line and nothing else moves. Newlines are free; a command nobody can read is not.
+
+A backslash-newline is removed inside double quotes as well as outside, so the rejoin is exact.
 
 When the work is not a ticket, the acceptance-criteria clause is dropped rather than left pointing at nothing, `bypassPermissions` is not carried over, and the session name is left **empty on purpose** - ad-hoc work has no name until the person starting it decides what this session is, so the slot stays open to be typed at the moment of pasting:
 
