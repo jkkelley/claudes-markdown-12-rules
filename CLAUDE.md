@@ -160,10 +160,13 @@ Newest on top. Adding an entry removes the tenth in the same commit. Entries are
 The session is launched with the command the `hydration-prompt` skill hands back, which is emitted rather than typed so it cannot disagree with the entry it points at:
 
 ```sh
-claude -p "Read Hydration Prompt located at $FULL_PATH_TO_FILE, Process work order $WO_ID per its acceptance criteria after you've read it." --permission-mode bypassPermissions -n "Session: $WO_ID - $WO_TITLE"
+claude -p "Read Hydration Prompt located at \
+/full/path/HYDRATION.md, Process work order WO-... per its acceptance \
+criteria after you've read it." --permission-mode bypassPermissions \
+-n "Session: WO-... - The full title"
 ```
 
-**On one line, and that is not a style choice.** A backslash only continues a line when the newline after it is real. A chat transcript, a narrower terminal or a markdown renderer can each introduce a break that is not real or drop one that was, and the first fragment is usually a syntactically valid command that does the wrong thing - so the shell runs it rather than complaining. A single line has nothing to lose.
+**The command is folded by the script at 68 columns, with continuations flush left, and that is not cosmetic.** A single line is not safe: every surface it travels through soft-wraps at its own width, and a copy taken out of that surface can carry the break with it, landing in the middle of a quoted string. The first fragment is then usually a syntactically valid command that does the wrong thing, so the shell runs it rather than complaining. Folding it ourselves means the line the user sees is the line we wrote. A backslash-newline is removed inside double quotes as well as outside, so the rejoin is exact.
 
 When the work is not a ticket, the acceptance-criteria clause is dropped rather than left pointing at nothing, `bypassPermissions` is not carried over, and the session name is left **empty on purpose** - ad-hoc work has no name until the person starting it decides what this session is, so the slot stays open to be typed at the moment of pasting:
 
