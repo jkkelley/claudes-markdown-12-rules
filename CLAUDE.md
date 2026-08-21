@@ -133,11 +133,11 @@ claude -p "Read Hydration Prompt located at $FULL_PATH_TO_FILE, Process work ord
   -n "Session: $WO_ID - $WO_TITLE"
 ```
 
-When the work is not a ticket, the acceptance-criteria clause is dropped rather than left pointing at nothing, and the session takes its name from the entry's title:
+When the work is not a ticket, the acceptance-criteria clause is dropped rather than left pointing at nothing, `bypassPermissions` is not carried over, and the session name is left **empty on purpose** - ad-hoc work has no name until the person starting it decides what this session is, so the slot stays open to be typed at the moment of pasting:
 
 ```sh
 claude -p "Read Hydration Prompt located at $FULL_PATH_TO_FILE" \
-  -n "Session: $TITLE"
+  -n "Session: "
 ```
 
 Zenith agent instructions
