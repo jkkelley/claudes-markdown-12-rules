@@ -102,20 +102,46 @@ Do not wait for the user to spell out the steps each time.
 
 ## The close-out flow
 
-**`CONTEXT_STATE.md` -> hydration prompt -> one PR -> merge -> cleanup -> the command.** In that order, every time.
+**Everything the ticket owns happens on the work branch, and the ticket reaches `done` there.** Then one pull request, then the merge, then the handback.
+
+We always roll forward. Nothing about a ticket is left as paperwork that follows the PR, because paperwork that follows a merge is paperwork that gets skipped.
+
+```text
+close-out
+│
+├─ ON THE WORK BRANCH ─── everything the ticket owns, nothing deferred
+│  │
+│  ├─ 1. CONTEXT_STATE.md        new checkpoint at the TOP, newest first
+│  │
+│  ├─ 2. THE TICKET REACHES done ← every part of it, in this order
+│  │     ├─ evidence every AC      work-order.sh evidence --observed
+│  │     ├─ interview-ready retro  work-order.sh note
+│  │     └─ mark it done           work-order.sh done
+│  │
+│  └─ 3. HYDRATION.md            hydration.sh check, then add
+│
+├─ ONE PULL REQUEST
+│  └─ 4. push once               code + ticket + state + prompt, one review
+│
+└─ AFTER THE MERGE
+   ├─ 5. archive                 work-order.sh close, straight to main
+   ├─ 6. cleanup                 ff main, delete the branch both sides
+   └─ 7. hand back               the prompt AND its launch command, then hold
+```
 
 **There is exactly one pull request per ticket.** A second PR carrying only state files doubles the review surface for one piece of work and leaves `main` briefly describing a world that no longer exists.
 
 1. Update `CONTEXT_STATE.md` **on the work branch, as part of the work**. New checkpoint at the **top**, newest first. It is part of the deliverable, not paperwork that follows it.
-2. Generate the successor's hydration prompt **on the same branch** with `.claude/skills/hydration-prompt/scripts/hydration.sh`. Never hand-edit `HYDRATION.md`; the script owns its ordering and its window.
-3. Leave the interview-ready retro as a note on the ticket, then `work-order.sh done`, still on the same branch.
-4. Push once and open **one** PR. It carries the code, the state file and the hydration prompt together, so one review sees the change and the record of the change.
+2. **The ticket is marked `done` on the same branch, and everything it needs to get there is done first.** Evidence every acceptance criterion with `--observed`, including what the command or console actually printed; if a criterion is not met, say so plainly rather than dressing it up. Leave the interview-ready retro as a note. Then `work-order.sh done`. This is the rule the rest of the flow depends on: a branch carrying finished code and an unfinished ticket merges into a `main` where the work exists and the record of it does not.
+3. Generate the successor's hydration prompt **on the same branch** with the `hydration-prompt` skill. Never hand-edit `HYDRATION.md`; the script owns its ordering and its window.
+4. Push once and open **one** PR. It carries the code, the finished ticket, the state file and the hydration prompt together, so one review sees the change and the whole record of the change.
 5. After the merge, run `bash .claude/skills/work-order/scripts/work-order.sh close --id WO-...`. It backfills the merge SHA, archives the ticket and regenerates `INDEX.md` **straight to `main`** - no second PR. It falls back to a PR only if that push is rejected.
-6. Hand back **both** the hydration prompt and the command that starts the next session, then hold. Do not start it.
+6. Post-merge cleanup: fast-forward `main`, delete the feature branch locally and on the remote.
+7. Hand back **both** the hydration prompt and the command that starts the next session, then hold. Do not start it.
 
 **Never open a PR whose only content is `CONTEXT_STATE.md` or `HYDRATION.md`.**
 
-**Check whether your PR has already merged before every commit once it is open.** A squash merge rewrites the SHA and closes the branch, so a commit pushed seconds later is stranded on a branch nothing points at. Recovery is fast-forward `main`, branch fresh, cherry-pick, delete both sides - but noticing late is avoidable, and it is the usual reason the one-PR rule gets broken.
+**Check whether your PR has already merged before every commit once it is open.** A squash merge rewrites the SHA and closes the branch, so a commit pushed seconds later is stranded on a branch nothing points at. Recovery is fast-forward `main`, branch fresh, cherry-pick, delete both sides - but noticing late is avoidable, and it is the usual reason a step gets skipped and the one-PR rule gets broken.
 
 ## Starting a session
 
