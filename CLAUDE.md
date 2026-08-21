@@ -69,12 +69,43 @@ Do not wait for the user to spell out the steps each time.
 
 ## The close-out flow
 
-**`CONTEXT_STATE.md` -> PR -> cleanup -> hydration prompt.** In that order, every time.
+**`CONTEXT_STATE.md` -> hydration prompt -> one PR -> merge -> cleanup -> the command.** In that order, every time.
 
-1. Update `CONTEXT_STATE.md` **on the work branch, as part of the work**, before the PR is opened. It is part of the deliverable, not paperwork that follows it.
-2. Open the PR. It carries the code and the state file together, so one review sees the change and the record of the change.
-3. After the merge, run `bash .claude/skills/work-order/scripts/work-order.sh close --id WO-...`. It opens its own PR for the merge SHA, the archive move and the `INDEX.md` regeneration. That one is generated bookkeeping and is expected.
-4. Leave the hydration prompt at the bottom of `CONTEXT_STATE.md` naming the next work order by **both its id and its full title**, so the next session starts from a file rather than from memory.
+**There is exactly one pull request per ticket.** A second PR carrying only state files doubles the review surface for one piece of work and leaves `main` briefly describing a world that no longer exists.
+
+1. Update `CONTEXT_STATE.md` **on the work branch, as part of the work**. New checkpoint at the **top**, newest first. It is part of the deliverable, not paperwork that follows it.
+2. Generate the successor's hydration prompt **on the same branch** with `.claude/skills/hydration-prompt/scripts/hydration.sh`. Never hand-edit `HYDRATION.md`; the script owns its ordering and its window.
+3. Leave the interview-ready retro as a note on the ticket, then `work-order.sh done`, still on the same branch.
+4. Push once and open **one** PR. It carries the code, the state file and the hydration prompt together, so one review sees the change and the record of the change.
+5. After the merge, run `bash .claude/skills/work-order/scripts/work-order.sh close --id WO-...`. It backfills the merge SHA, archives the ticket and regenerates `INDEX.md` **straight to `main`** - no second PR. It falls back to a PR only if that push is rejected.
+6. Hand back **both** the hydration prompt and the command that starts the next session, then hold. Do not start it.
+
+**Never open a PR whose only content is `CONTEXT_STATE.md` or `HYDRATION.md`.**
+
+**Check whether your PR has already merged before every commit once it is open.** A squash merge rewrites the SHA and closes the branch, so a commit pushed seconds later is stranded on a branch nothing points at. Recovery is fast-forward `main`, branch fresh, cherry-pick, delete both sides - but noticing late is avoidable, and it is the usual reason the one-PR rule gets broken.
+
+## Starting a session
+
+`HYDRATION.md` is the prompt that starts the next session, and the nine before it.
+
+**Read the top entry only.** It is current and complete on its own; everything below it has been superseded and is kept for history, not for reading. This is the one sliding-window file where retention depth and reading depth deliberately differ: ten full hydration prompts is roughly fifteen thousand words of superseded instructions.
+
+Newest on top. Adding an entry removes the tenth in the same commit. Entries are never numbered, never renumbered and never edited in place; a correction is a new entry.
+
+The session is launched with the command the `hydration-prompt` skill hands back, which is emitted rather than typed so it cannot disagree with the entry it points at:
+
+```sh
+claude -p "Read Hydration Prompt located at $FULL_PATH_TO_FILE, Process work order $WO_ID per its acceptance criteria after you've read it." \
+  --permission-mode bypassPermissions \
+  -n "Session: $WO_ID - $WO_TITLE"
+```
+
+When the work is not a ticket, the acceptance-criteria clause is dropped rather than left pointing at nothing, and the session takes its name from the entry's title:
+
+```sh
+claude -p "Read Hydration Prompt located at $FULL_PATH_TO_FILE" \
+  -n "Session: $TITLE"
+```
 
 Zenith agent instructions
 
