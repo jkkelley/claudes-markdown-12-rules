@@ -121,6 +121,12 @@ Do not wait for the user to spell out the steps each time.
 
 `HYDRATION.md` is the prompt that starts the next session, and the nine before it.
 
+**`HYDRATION.md` is the instruction. `CONTEXT_STATE.md` is the background it assumes.** Both are written in the same commit, by the same close-out, describing the same moment, and an agent reads both. **When they disagree, the hydration prompt wins.**
+
+That is not a tie to be reconciled and not a judgement call. `CONTEXT_STATE.md` is a state snapshot - where things stood, what was decided, what was learned. `HYDRATION.md` is an instruction written for this session - what to do, what not to assume, what must be settled first. State describes; the prompt directs. A snapshot that has drifted is stale information, which is survivable. An instruction overridden by stale information is how a session goes and does the wrong thing confidently.
+
+Read the hydration prompt first, then the state file for context. If the two contradict, follow the prompt and **say so** - two files written in the same commit that disagree is a defect worth reporting, not worth silently resolving.
+
 **Read the top entry only.** It is current and complete on its own; everything below it has been superseded and is kept for history, not for reading. This is the one sliding-window file where retention depth and reading depth deliberately differ: ten full hydration prompts is roughly fifteen thousand words of superseded instructions.
 
 Newest on top. Adding an entry removes the tenth in the same commit. Entries are never numbered, never renumbered and never edited in place; a correction is a new entry.
