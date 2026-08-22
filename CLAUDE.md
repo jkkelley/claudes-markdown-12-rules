@@ -228,13 +228,21 @@ Newest on top. Adding an entry removes the tenth in the same commit. Entries are
 The session is launched with the command the `hydration-prompt` skill hands back, which is emitted rather than typed so it cannot disagree with the entry it points at:
 
 ```sh
-claude -p "Read Hydration Prompt located at \
-/full/path/HYDRATION.md, Process work order WO-20260819-ca7c per its \
-acceptance criteria after you've read it." \
---permission-mode bypassPermissions \
+claude --permission-mode bypassPermissions \
 -n "Session: WO-20260819-ca7c - Phase 5: the mothership GUI, its \
-container image, and the first visual"
+container image, and the first visual" \
+"Read Hydration Prompt located at \
+/full/path/HYDRATION.md, Process work order WO-20260819-ca7c per its \
+acceptance criteria after you've read it."
 ```
+
+**The prompt is a positional argument, and it must never go back to `-p`.**
+This was `claude -p "<prompt>"` until it was found to be wrong in the way that looks right.
+`-p` is `--print` - "print response and exit" - so the command ran the hydration prompt headless, printed a reply and quit.
+Nobody ever landed in a session, which is the one thing the whole close-out exists to arrange.
+It survived as long as it did because the failure produces plausible output rather than an error: a sensible-looking answer in the terminal, and no session.
+`claude [options] [prompt]` takes the prompt positionally, and without `-p` that starts an interactive session with the prompt already delivered.
+The prompt goes last, after the options, so adding a flag never has to step over it.
 
 **The script lays it out one argument per line and folds at 68 columns, flush left, and that is not cosmetic.** A single line is not safe: every surface it travels through soft-wraps at its own width, and a copy taken out of that surface carries the break with it into the middle of a quoted string. The first fragment is then usually a syntactically valid command that does the wrong thing, so the shell runs it rather than complaining.
 
@@ -242,10 +250,15 @@ One argument per line rather than a greedy fill, because a greedy fill puts an a
 
 A backslash-newline is removed inside double quotes as well as outside, so the rejoin is exact.
 
-When the work is not a ticket, the acceptance-criteria clause is dropped rather than left pointing at nothing, `bypassPermissions` is not carried over, and the session name is left **empty on purpose** - ad-hoc work has no name until the person starting it decides what this session is, so the slot stays open to be typed at the moment of pasting:
+When the work is not a ticket the command collapses to one argument on one line, and every difference is deliberate.
+There is **no prompt at all** - not a shortened one, not the bare located-at clause.
+Work outside a ticket has no instruction until the person starting it writes one, and a guessed prompt aims a session at the wrong thing with full confidence.
+`bypassPermissions` is not carried over, because a ticket has a reviewed scope behind it and an ad-hoc session has none.
+The session name is left **empty on purpose**, for the same reason - ad-hoc work has no name until the person starting it decides what this session is, so the slot stays open to be typed at the moment of pasting.
+What is left is a named, empty session the human then drives, which is the correct amount of scaffolding for work nobody has scoped yet:
 
 ```sh
-claude -p "Read Hydration Prompt located at $FULL_PATH_TO_FILE" -n "Session: "
+claude -n "Session: "
 ```
 
 Zenith agent instructions
